@@ -71,3 +71,36 @@ server.post("/logs/registros", (request, response) => {
     });
   });
 });
+server.post("/logs", (request, response) => {
+  const { name } = request.body;
+
+
+  if (!name) {
+    return response.status(400).json({ error: "O campo 'name' é obrigatório." });
+  }
+
+
+  const newLog = {
+    id: randomUUID(),
+    message: `Olá, ${name}! Log criado com sucesso.`,
+    timestamp: new Date().toISOString(),
+  };
+
+
+  readLogs((err, logs) => {
+    if (err) return response.status(500).json({ error: "Erro ao ler os logs." });
+
+
+    logs.push(newLog);
+
+
+    writeLogs(logs, (err) => {
+      if (err) return response.status(500).json({ error: "Erro ao salvar o log." });
+
+
+      return response.status(200).json({ message: newLog.message, id: newLog.id });
+    });
+  });
+});
+
+

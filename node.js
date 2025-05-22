@@ -54,3 +54,20 @@ server.post("/logs/registros", (request, response) => {
     name,
     dateRequested: new Date().toISOString(),
   };
+
+
+  readLogs((err, logs) => {
+    if (err) return response.status(500).json({ error: "Erro ao ler os logs." });
+
+
+    logs.push(newUser);
+
+
+    writeLogs(logs, (err) => {
+      if (err) return response.status(500).json({ error: "Erro ao salvar o registro." });
+
+
+      return response.status(201).json({ message: "Registro criado com sucesso.", data: newUser });
+    });
+  });
+});

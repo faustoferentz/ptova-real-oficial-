@@ -104,3 +104,29 @@ server.post("/logs", (request, response) => {
 });
 
 
+server.get("/logs/:id", (request, response) => {
+  const { id } = request.params;
+
+
+  readLogs((err, logs) => {
+    if (err) return response.status(500).json({ error: "Erro ao ler os logs." });
+
+
+    const log = logs.find((item) => item.id === id);
+
+
+    if (!log) {
+      return response.status(404).json({ error: "Log com o ID fornecido não foi encontrado." });
+    }
+
+
+    return response.status(200).json(log);
+  });
+});
+
+
+
+
+server.listen(PORT, () => {
+  console.log(`Servidor rodando em http://localhost:${PORT}`);
+});

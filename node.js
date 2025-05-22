@@ -31,3 +31,26 @@ function readLogs(callback) {
     callback(null, logs);
   });
 }
+function writeLogs(logs, callback) {
+  fs.writeFile(LOG_FILE, JSON.stringify(logs, null, 2), (err) => {
+    callback(err);
+  });
+}
+
+
+
+
+server.post("/logs/registros", (request, response) => {
+  const { name } = request.body;
+
+
+  if (!name) {
+    return response.status(400).json({ error: "O campo 'name' é obrigatório." });
+  }
+
+
+  const newUser = {
+    id: randomUUID(),
+    name,
+    dateRequested: new Date().toISOString(),
+  };
